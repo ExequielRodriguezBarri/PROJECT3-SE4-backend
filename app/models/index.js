@@ -17,6 +17,10 @@ db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.session = require("./session.model.js")(sequelize, Sequelize);
 db.resume = require("./resume.model.js")(sequelize, Sequelize);
+db.interest = require("./interest.model.js")(sequelize, Sequelize);
+db.projects = require("./projects.model.js")(sequelize, Sequelize);
+db.skill = require("./skill.model.js")(sequelize, Sequelize);
+db.education = require("./education.model.js")(sequelize, Sequelize);
 
 // foreign key for session
 db.user.hasMany(
@@ -42,7 +46,53 @@ db.resume.belongsTo(
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 
+// foreign key for education
+db.user.hasMany(
+  db.education,
+  { as: "education" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.education.belongsTo(
+  db.user,
+  { as: "user" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
 
+// foreign key for interest
+db.user.hasMany(
+  db.interest,
+  { as: "interest" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.interest.belongsTo(
+  db.user,
+  { as: "user" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+// foreign key for project
+db.user.hasMany(
+  db.project,
+  { as: "project" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.project.belongsTo(
+  db.user,
+  { as: "user" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+// foreign key for skill
+db.user.hasMany(
+  db.skill,
+  { as: "skill" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.skill.belongsTo(
+  db.user,
+  { as: "user" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
 
 
 module.exports = db;
