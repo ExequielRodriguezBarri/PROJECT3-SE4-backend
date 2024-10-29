@@ -22,14 +22,22 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
+// // simple route
+// app.get("/", (req, res) => {
+//   res.json({ message: "Welcome to bezkoder application." });
+// });
 
 require("./app/routes/auth.routes.js")(app);
-require("./app/routes/user.routes")(app);
-require("./app/routes/resume.routes")(app);
+require("./app/routes/user.routes.js")(app);
+require("./app/routes/resume.routes.js")(app);
+require("./app/routes/interest.routes.js")(app);
+require("./app/routes/education.routes.js")(app);
+require("./app/routes/projects.routes.js")(app);
+require("./app/routes/skill.routes.js")(app);
+require("./app/routes/awards.routes.js")(app);
+require("./app/routes/courseWork.routes.js")(app);
+require("./app/routes/experience.routes.js")(app);
+require("./app/routes/links.routes.js")(app);
 
 
 // set port, listen for requests

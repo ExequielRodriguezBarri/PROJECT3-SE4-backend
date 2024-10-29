@@ -10,7 +10,7 @@ module.exports = (app) => {
     router.get("/", [authenticate], resumes.findAll);
   
     // Retrieve all resumes for user
-    router.get("/userTut/:userId", [authenticate], resumes.findAllForUser);
+    router.get("/:userId", [authenticate], resumes.findAllForUser);
   
     // Retrieve a single resume with id
     router.get("/:id", [authenticate], resumes.findOne);

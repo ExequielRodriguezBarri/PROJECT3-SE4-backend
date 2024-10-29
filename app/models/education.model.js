@@ -1,16 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
-    const Resume = sequelize.define("resume", {
-      title: {
+    const Education = sequelize.define("education", {
+      name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      description: {
+      degreeType: {
         type: Sequelize.STRING,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
         allowNull: false
-      }
+      },
     });
-    return Resume;
+    return Education;
 };
