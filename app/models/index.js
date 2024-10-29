@@ -1,5 +1,6 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -10,89 +11,54 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     idle: dbConfig.pool.idle,
   },
 });
+
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+// Models
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.session = require("./session.model.js")(sequelize, Sequelize);
 db.resume = require("./resume.model.js")(sequelize, Sequelize);
-db.interest = require("./interest.model.js")(sequelize, Sequelize);
+db.education = require("./education.model.js")(sequelize, Sequelize);
+db.experience = require("./experience.model.js")(sequelize, Sequelize);
+db.links = require("./links.model.js")(sequelize, Sequelize);
+db.awards = require("./awards.model.js")(sequelize, Sequelize);
+db.courseWork = require("./courseWork.model.js")(sequelize, Sequelize);
+db.interest = require("./interests.model.js")(sequelize, Sequelize);
 db.projects = require("./projects.model.js")(sequelize, Sequelize);
 db.skill = require("./skill.model.js")(sequelize, Sequelize);
-db.education = require("./education.model.js")(sequelize, Sequelize);
 
-// foreign key for session
-db.user.hasMany(
-  db.session,
-  { as: "sessions" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.session.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
+// 1. User and Resume (One-to-Many)
+db.user.hasMany(db.resume, { as: "resumes", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+db.resume.belongsTo(db.user, { as: "user", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
 
-// foreign key for resume
-db.user.hasMany(
-  db.resume,
-  { as: "resume" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.resume.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
+// 2. User and Other Tables (One-to-Many)
+[db.education, db.experience, db.links, db.awards, db.courseWork].forEach((model) => {
+  db.user.hasMany(model, { as: model.name, foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+  model.belongsTo(db.user, { as: "user", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+});
 
-// foreign key for education
-db.user.hasMany(
-  db.education,
-  { as: "education" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.education.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
+// 3. Many-to-Many Relationships between Resume and Other Tables
+const junctionTables = [
+  { model: db.education, name: "resume_education" },
+  { model: db.experience, name: "resume_experience" },
+  { model: db.links, name: "resume_links" },
+  { model: db.awards, name: "resume_awards" },
+  { model: db.courseWork, name: "resume_courseWork" },
+  { model: db.projects, name: "resume_projects" },
+  { model: db.interest, name: "resume_interests" },
+  { model: db.skill, name: "resume_skills" },
+];
 
-// foreign key for interest
-db.user.hasMany(
-  db.interest,
-  { as: "interest" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.interest.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
+junctionTables.forEach(({ model, name }) => {
+  const junctionTable = sequelize.define(name, {}, { timestamps: false });
+  db.resume.belongsToMany(model, { through: junctionTable, as: model.name });
+  model.belongsToMany(db.resume, { through: junctionTable, as: "resumes" });
+});
 
-// foreign key for project
-db.user.hasMany(
-  db.project,
-  { as: "project" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.project.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-
-// foreign key for skill
-db.user.hasMany(
-  db.skill,
-  { as: "skill" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.skill.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-
+// 4. User and Session (One-to-Many)
+db.user.hasMany(db.session, { as: "sessions", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+db.session.belongsTo(db.user, { as: "user", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
 
 module.exports = db;

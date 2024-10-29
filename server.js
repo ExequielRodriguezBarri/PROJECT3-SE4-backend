@@ -34,6 +34,10 @@ require("./app/routes/interest.routes.js")(app);
 require("./app/routes/education.routes.js")(app);
 require("./app/routes/projects.routes.js")(app);
 require("./app/routes/skill.routes.js")(app);
+require("./app/routes/awards.routes.js")(app);
+require("./app/routes/courseWork.routes.js")(app);
+require("./app/routes/experience.routes.js")(app);
+require("./app/routes/links.routes.js")(app);
 
 
 // set port, listen for requests
