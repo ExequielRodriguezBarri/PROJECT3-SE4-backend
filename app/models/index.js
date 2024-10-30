@@ -58,7 +58,7 @@ junctionTables.forEach(({ model, name }) => {
 });
 
 // 4. User and Session (One-to-Many)
-db.user.hasMany(db.session, { as: "sessions", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
-db.session.belongsTo(db.user, { as: "user", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+db.user.hasMany(db.session);
+db.session.belongsTo(db.user);
 
 module.exports = db;
