@@ -24,7 +24,6 @@ db.education = require("./education.model.js")(sequelize, Sequelize);
 db.experience = require("./experience.model.js")(sequelize, Sequelize);
 db.links = require("./links.model.js")(sequelize, Sequelize);
 db.awards = require("./awards.model.js")(sequelize, Sequelize);
-db.courseWork = require("./courseWork.model.js")(sequelize, Sequelize);
 db.interest = require("./interests.model.js")(sequelize, Sequelize);
 db.projects = require("./projects.model.js")(sequelize, Sequelize);
 db.skill = require("./skill.model.js")(sequelize, Sequelize);
@@ -35,7 +34,7 @@ db.user.hasMany(db.resume, { as: "resumes", foreignKey: { allowNull: false }, on
 db.resume.belongsTo(db.user, { as: "user", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
 
 // 2. User and Other Tables (One-to-Many)
-[db.education, db.experience, db.links, db.awards, db.courseWork, db.contactInfo, db.interest, db.projects, db.skill].forEach((model) => {
+[db.education, db.experience, db.links, db.awards, db.contactInfo, db.interest, db.projects, db.skill].forEach((model) => {
   db.user.hasMany(model, { as: model.name, foreignKey: { allowNull: false }, onDelete: "CASCADE" });
   model.belongsTo(db.user, { as: "user", foreignKey: { allowNull: false }, onDelete: "CASCADE" });
 });
@@ -47,7 +46,6 @@ const junctionTables = [
   { model: db.experience, name: "resume_experience" },
   { model: db.links, name: "resume_links" },
   { model: db.awards, name: "resume_awards" },
-  { model: db.courseWork, name: "resume_courseWork" },
   { model: db.projects, name: "resume_projects" },
   { model: db.interest, name: "resume_interests" },
   { model: db.skill, name: "resume_skills" },

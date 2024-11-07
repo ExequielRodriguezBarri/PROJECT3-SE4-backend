@@ -3,18 +3,14 @@ const ContactInfo = db.contactInfo;
 const Op = db.Sequelize.Op;
 // Create and Save a new ContactInfo
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.careerPosition) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
   // Create a ContactInfo
   const contactInfo = {
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     phone_number: req.body.phone_number,
     address: req.body.address,
     email: req.body.email,
+    userId: req.body.userId,
   };
   // Save ContactInfo in the database
   ContactInfo.create(contactInfo)

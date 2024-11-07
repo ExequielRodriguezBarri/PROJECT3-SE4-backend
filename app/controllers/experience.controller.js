@@ -3,16 +3,16 @@ const Experience = db.Experience;
 
 // Create and Save a new Experience
 exports.create = (req, res) => {
-  if (!req.body.position_name || !req.body.company) {
-    res.status(400).send({ message: "Content cannot be empty!" });
-    return;
-  }
 
   const experience = {
-    position_name: req.body.position_name,
-    company: req.body.company,
-    job_description: req.body.job_description,
-    years_worked: req.body.years_worked,
+    job_title: req.body.job_title,
+    company_name: req.body.company_name,
+    location: req.body.location,
+    responsibilities: req.body.responsibilities,
+    start_date: req.body.start_date,
+    end_date: req.body.end_date,
+    userId: req.body.userId,
+
   };
 
   Experience.create(experience)
@@ -30,6 +30,29 @@ exports.findAll = (req, res) => {
       message: err.message || "Some error occurred while retrieving Experiences."
     }));
 };
+
+// Find a single ContactInfo with an id
+exports.findAllForUser = (req, res) => {
+  const userId = req.params.userId;
+  Experience.findAll({ where: { userId: userId } })
+    .then((data) => {
+      if (data) {
+        res.send(data);
+      } else {
+        res.status(404).send({
+          message: `Cannot find Experience for user with id=${userId}.`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message ||
+          "Error retrieving Experience for user with id=" + userId,
+      });
+    });
+};
+
 
 // Retrieve a single Experience by ID
 exports.findOne = (req, res) => {
