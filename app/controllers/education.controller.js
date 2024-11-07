@@ -3,17 +3,12 @@ const Education = db.education;
 const Op = db.Sequelize.Op;
 // Create and Save a new Education
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.name) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
   // Create a Education
   const education = {
-    name: req.body.name,
-    description: req.body.degreeType,
+    institution: req.body.institution,
+    degree: req.body.degree,
+    graduationDate: req.body.graduationDate,
+    gpa: req.body.gpa,
     userId: req.body.userId,
   };
   // Save Education in the database
@@ -30,8 +25,8 @@ exports.create = (req, res) => {
 };
 // Retrieve all Educations from the database.
 exports.findAll = (req, res) => {
-  const name = req.query.name;
-  var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  const institution = req.query.institution;
+  var condition = institution ? { institution: { [Op.like]: `%${institution}%` } } : null;
   Education.findAll({ where: condition })
     .then((data) => {
       res.send(data);
