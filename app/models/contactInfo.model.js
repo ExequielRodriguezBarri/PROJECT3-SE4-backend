@@ -1,5 +1,5 @@
-export default (sequelize, Sequelize) => {
-    const contactInfo = sequelize.define("contactInfo", {
+module.exports = (sequelize, Sequelize) => {
+  const contactInfo = sequelize.define("contactInfo", {
       phone_number: {
         type: Sequelize.STRING,
         allowNull: false
