@@ -1,21 +1,29 @@
 module.exports = (sequelize, Sequelize) => {
     const Experience = sequelize.define("Experience", {
-      position_name: {
+      job_title: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      company: {
+      company_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      job_description: {
+      location: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      
+      start_date: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      end_date: {
+        type: Sequelize.STRING,
+      },
+      responsibilities: {
         type: Sequelize.TEXT,
         allowNull: true,
-      },
-      years_worked: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
+      }
     }, 
     {
       timestamps: false,

@@ -3,17 +3,12 @@ const Project = db.project;
 const Op = db.Sequelize.Op;
 // Create and Save a new Project
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.title) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
   // Create a Project
   const project = {
-    title: req.body.title,
+    project_name: req.body.project_name,
     description: req.body.description,
+    role: req.body.role,
+    results: req.body.results,
     userId: req.body.userId,
   };
   // Save Project in the database
