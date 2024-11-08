@@ -12,8 +12,9 @@ exports.create = (req, res) => {
   }
   // Create a Interest
   const interest = {
-    title: req.body.careerPosition,
+    careerPosition: req.body.careerPosition,
     description: req.body.description,
+    userId: req.body.userId,
   };
   // Save Interest in the database
   Interest.create(interest)

@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Interest = sequelize.define("interest", {
-      carrerPosition: {
+      careerPosition: {
         type: Sequelize.STRING,
         allowNull: false
       },
