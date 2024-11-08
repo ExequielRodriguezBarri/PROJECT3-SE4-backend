@@ -1,5 +1,5 @@
 const db = require("../models");
-const Links = db.Links;
+const Links = db.links;
 
 exports.create = (req, res) => {
   if (!req.body.type || !req.body.link) {
@@ -7,7 +7,8 @@ exports.create = (req, res) => {
     return;
   }
 
-  const link = { type: req.body.type, link: req.body.link };
+  const link = { type: req.body.type, link: req.body.link, userId: req.body.userId,
+  };
 
   Links.create(link)
     .then(data => res.send(data))
@@ -19,6 +20,28 @@ exports.findAll = (req, res) => {
     .then(data => res.send(data))
     .catch(err => res.status(500).send({ message: err.message || "Error retrieving Links." }));
 };
+
+exports.findAllForUser = (req, res) => {
+  const userId = req.params.userId;
+  Links.findAll({ where: { userId: userId } })
+    .then((data) => {
+      if (data) {
+        res.send(data);
+      } else {
+        res.status(404).send({
+          message: `Cannot find Links for user with id=${userId}.`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message ||
+          "Error retrieving Links for user with id=" + userId,
+      });
+    });
+};
+
 
 exports.findOne = (req, res) => {
   const id = req.params.id;

@@ -8,7 +8,10 @@ module.exports = (app) => {
   
     // Retrieve all Links
     router.get("/", [authenticate], links.findAll);
-  
+
+  // Retrieve all interests for user
+  router.get("/:userId", [authenticate], links.findAllForUser);
+
     // Retrieve a single Link with id
     router.get("/:id", [authenticate], links.findOne);
   
