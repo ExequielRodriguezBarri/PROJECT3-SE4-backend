@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 require("./app/routes/auth.routes.js")(app);
 require("./app/routes/user.routes.js")(app);
+require("./app/routes/contactInfo.routes.js")(app);
 require("./app/routes/resume.routes.js")(app);
 require("./app/routes/interest.routes.js")(app);
 require("./app/routes/education.routes.js")(app);

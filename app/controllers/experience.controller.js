@@ -1,5 +1,5 @@
 const db = require("../models");
-const Experience = db.Experience;
+const Experience = db.experience;
 
 // Create and Save a new Experience
 exports.create = (req, res) => {
