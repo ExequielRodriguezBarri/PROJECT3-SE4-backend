@@ -1,5 +1,5 @@
 const db = require("../models");
-const Project = db.project;
+const Project = db.projects;
 const Op = db.Sequelize.Op;
 // Create and Save a new Project
 exports.create = (req, res) => {

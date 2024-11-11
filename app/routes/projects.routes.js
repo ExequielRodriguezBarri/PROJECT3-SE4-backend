@@ -24,5 +24,5 @@ module.exports = (app) => {
     // Delete all projects
     router.delete("/", [authenticate], projects.deleteAll);
   
-    app.use("/resume/project", router);
+    app.use("/resume/projects", router);
   };
