@@ -8,6 +8,9 @@ module.exports = (app) => {
   
     // Retrieve all Experiences
     router.get("/", [authenticate], experiences.findAll);
+
+    // Retrieve all projects for user
+    router.get("/:userId", [authenticate], experiences.findAllForUser);
   
     // Retrieve a single Experience with id
     router.get("/:id", [authenticate], experiences.findOne);
