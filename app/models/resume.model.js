@@ -10,7 +10,11 @@ module.exports = (sequelize, Sequelize) => {
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false
-      }
+      },
+      pdfData: {
+        type: Sequelize.BLOB('long'),  // Specifies a LONGBLOB in MySQL
+      },
+
     });
     return Resume;
 };
