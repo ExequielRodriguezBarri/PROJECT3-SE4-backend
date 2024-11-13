@@ -1,5 +1,5 @@
 const db = require("../models");
-const Awards = db.Awards;
+const Awards = db.awards;
 
 exports.create = (req, res) => {
   if (!req.body.title || !req.body.year_Awarded) {
@@ -7,7 +7,8 @@ exports.create = (req, res) => {
     return;
   }
 
-  const award = { title: req.body.title, year_Awarded: req.body.year_Awarded, description: req.body.description };
+  const award = { title: req.body.title, year_Awarded: req.body.year_Awarded, description: req.body.description, userId: req.body.userId,
+  };
 
   Awards.create(award)
     .then(data => res.send(data))
@@ -20,13 +21,28 @@ exports.findAll = (req, res) => {
     .catch(err => res.status(500).send({ message: err.message || "Error retrieving Awards." }));
 };
 
-exports.findOne = (req, res) => {
-    const id = req.params.id;
-    Awards.findByPk(id)
-      .then(data => data ? res.send(data) : res.status(404).send({ message: `Award with id=${id} not found.` }))
-      .catch(err => res.status(500).send({ message: err.message || "Error retrieving Award with id=" + id }));
-  };
-  
+
+// Find a single ContactInfo with an id
+exports.findAllForUser = (req, res) => {
+  const userId = req.params.userId;
+  Awards.findAll({ where: { userId: userId } })
+    .then((data) => {
+      if (data) {
+        res.send(data);
+      } else {
+        res.status(404).send({
+          message: `Cannot find Experience for user with id=${userId}.`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message ||
+          "Error retrieving Experience for user with id=" + userId,
+      });
+    });
+};  
   exports.update = (req, res) => {
     const id = req.params.id;
     Awards.update(req.body, { where: { id: id } })

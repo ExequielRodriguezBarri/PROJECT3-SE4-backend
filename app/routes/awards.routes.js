@@ -8,9 +8,9 @@ module.exports = (app) => {
   
     // Retrieve all Awards
     router.get("/", [authenticate], awards.findAll);
-  
-    // Retrieve a single Award with id
-    router.get("/:id", [authenticate], awards.findOne);
+
+    // Retrieve all projects for user
+    router.get("/:userId", [authenticate], awards.findAllForUser);
   
     // Update an Award with id
     router.put("/:id", [authenticate], awards.update);
