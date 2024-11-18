@@ -24,6 +24,6 @@ module.exports = (app) => {
     // Delete all Links
     router.delete("/", [authenticate], links.deleteAll);
   
-    app.use("/resume/links", router);
+    app.use("/resume-t7/links", router);
   };
   
