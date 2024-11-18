@@ -21,6 +21,6 @@ module.exports = (app) => {
     // Delete all Awards
     router.delete("/", [authenticate], awards.deleteAll);
   
-    app.use("/resume/awards", router);
+    app.use("/resume-t7/awards", router);
   };
   

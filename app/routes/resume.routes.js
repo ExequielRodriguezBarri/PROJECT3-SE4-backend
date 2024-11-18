@@ -24,5 +24,5 @@ module.exports = (app) => {
     // Delete all resumes
     router.delete("/", [authenticate], resumes.deleteAll);
   
-    app.use("/resume/resumes", router);
+    app.use("/resume-t7/resumes", router);
   };

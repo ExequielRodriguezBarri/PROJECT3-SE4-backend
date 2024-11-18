@@ -24,6 +24,6 @@ module.exports = (app) => {
     // Delete all Experiences
     router.delete("/", [authenticate], experiences.deleteAll);
   
-    app.use("/resume/experience", router);
+    app.use("/resume-t7/experience", router);
   };
   
