@@ -183,6 +183,7 @@ exports.login = async (req, res) => {
       token: token,
       email: email,
       userId: user.id,
+      role: user.role,
       expirationDate: tempExpirationDate,
     };
 
@@ -197,6 +198,7 @@ exports.login = async (req, res) => {
           lName: user.lName,
           userId: user.id,
           token: token,
+          role: user.role,
           // refresh_token: user.refresh_token,
           // expiration_date: user.expiration_date
         };
@@ -271,7 +273,6 @@ exports.authorize = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  console.log(req.body);
   if (req.body === null) {
     res.send({
       message: "User has already been successfully logged out!",
