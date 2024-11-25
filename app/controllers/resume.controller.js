@@ -108,6 +108,43 @@ exports.update = (req, res) => {
       });
     });
 };
+
+// Update only the comment of a Resume by the id in the request
+exports.updateComment = (req, res) => {
+  const id = req.params.id;
+  const { comment } = req.body;
+
+  // Check if comment is provided
+  if (!comment) {
+    return res.status(400).send({
+      message: "Comment cannot be empty!",
+    });
+  }
+
+  Resume.update(
+    { comment }, // Only update the comment field
+    { where: { id: id } }
+  )
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          message: "Comment was updated successfully.",
+        });
+      } else {
+        res.send({
+          message: `Cannot update comment for Resume with id=${id}. Maybe Resume was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error updating comment for Resume with id=" + id,
+      });
+    });
+};
+
+
+
 // Delete a Resume with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;

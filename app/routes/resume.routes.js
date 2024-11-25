@@ -17,7 +17,10 @@ module.exports = (app) => {
   
     // Update a resume with id
     router.put("/:id", [authenticate], resumes.update);
-  
+
+    // Update/Add comment to resume
+    router.put("/:id/comment", [authenticate], resumes.updateComment);
+    
     // Delete a resume with id
     router.delete("/:id", [authenticate], resumes.delete);
   
