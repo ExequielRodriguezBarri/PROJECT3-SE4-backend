@@ -53,9 +53,11 @@ const junctionTables = [
 
 junctionTables.forEach(({ model, name }) => {
   const junctionTable = sequelize.define(name, {}, { timestamps: false });
-  db.resume.belongsToMany(model, { through: junctionTable, as: model.name });
+  const aliasName = model.name.replace('resume_', ''); // Remove 'resume_' from the name
+  db.resume.belongsToMany(model, { through: junctionTable, as: aliasName });
   model.belongsToMany(db.resume, { through: junctionTable, as: "resumes" });
 });
+
 
 // 4. User and Session (One-to-Many)
 db.user.hasMany(db.session);

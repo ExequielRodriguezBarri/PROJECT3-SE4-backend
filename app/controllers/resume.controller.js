@@ -2,33 +2,52 @@ const db = require("../models");
 const Resume = db.resume;
 const Op = db.Sequelize.Op;
 // Create and Save a new Resume
-exports.create = (req, res) => {
-  // Validate request
+exports.create = async (req, res) => {
   if (!req.body.title) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
+    return res.status(400).send({ message: "Title cannot be empty!" });
   }
-  // Create a Resume
+
+  const {
+    contactIds,
+    skillIds,
+    experienceIds,
+    educationIds,
+    linkIds,
+    awardIds,
+    projectIds,
+    interestIds,
+  } = req.body;
+
+  // Create a Resume object
   const resume = {
     title: req.body.title,
     description: req.body.description,
-    published: req.body.published ? req.body.published : false,
     userId: req.body.userId,
+    pdfData: req.body.pdfBlob ? Buffer.from(req.body.pdfBlob, 'base64') : null,
   };
-  // Save Resume in the database
-  Resume.create(resume)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Resume.",
-      });
+
+  try {
+    // Create the Resume
+    const createdResume = await Resume.create(resume);
+    // BE VERY CAREFUL NOT TO CHANGE THE NAMES OF THE ADDFUNCTIONS BELOW
+
+    if(Array.isArray(educationIds)) await createdResume.addEducation(educationIds);
+    if(Array.isArray(experienceIds)) await createdResume.addExperience(experienceIds);
+    if(Array.isArray(skillIds)) await createdResume.addSkill(skillIds);
+    if(Array.isArray(contactIds)) await createdResume.addContactInfo(contactIds);
+    if(Array.isArray(linkIds)) await createdResume.addLinks(linkIds);
+    if(Array.isArray(awardIds)) await createdResume.addAwards(awardIds);
+    if(Array.isArray(projectIds)) await createdResume.addProject(projectIds);
+    if(Array.isArray(interestIds)) await createdResume.addInterest(interestIds);
+    // Return the Resume with the newly added associations
+    res.send(createdResume);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while creating the Resume.",
     });
+  }
 };
+
 // Retrieve all Resumes from the database.
 exports.findAll = (req, res) => {
   const title = req.query.title;
@@ -67,24 +86,37 @@ exports.findAllForUser = (req, res) => {
     });
 };
 // Find a single Resume with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const id = req.params.id;
-  Resume.findByPk(id)
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Resume with id=${id}.`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error retrieving Resume with id=" + id,
-      });
+
+  try {
+    // Fetch resume from database
+    const resume = await Resume.findByPk(id, {
+      attributes: ['id', 'title', 'description', 'pdfData', 'userId', 'createdAt', 'updatedAt'], // Specify the fields you need
     });
+    // Check if resume exists
+    if (resume) {
+      // Convert pdfData to base64 if it's not null
+      if (resume.pdfData) {
+        resume.pdfData = `data:application/pdf;base64,${resume.pdfData.toString('base64')}`;
+      }
+
+      // Send the resume data to the frontend
+      return res.status(200).send(resume);
+    } else {
+      return res.status(404).send({
+        message: `Cannot find Resume with id=${id}.`,
+      });
+    }
+  } catch (err) {
+    // Handle errors during the database query
+    console.error("Error fetching resume:", err);
+    return res.status(500).send({
+      message: err.message || `Error retrieving Resume with id=${id}.`,
+    });
+  }
 };
+
 // Update a Resume by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
