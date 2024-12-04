@@ -141,6 +141,33 @@ exports.update = (req, res) => {
     });
 };
 
+//Get comments by id
+exports.findComment = async (req, res) => {
+  const id = req.params.id; // Get the resume ID from the URL
+
+  try {
+    // Fetch only the comments field for the given resume ID
+    const resume = await Resume.findByPk(id, {
+      attributes: ['id', 'comment'], // Fetch only ID and comments
+    });
+
+    // Check if the resume exists
+    if (resume) {
+      return res.status(200).send({ comment: resume.comment || '' }); // Send comments or an empty string if null
+    } else {
+      return res.status(404).send({
+        message: `Cannot find Resume with id=${id}.`,
+      });
+    }
+  } catch (err) {
+    // Handle errors during database query
+    console.error("Error fetching comments:", err);
+    return res.status(500).send({
+      message: err.message || `Error retrieving comments for Resume with id=${id}.`,
+    });
+  }
+};
+
 // Update only the comment of a Resume by the id in the request
 exports.updateComment = (req, res) => {
   const id = req.params.id;

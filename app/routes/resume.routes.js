@@ -14,9 +14,12 @@ module.exports = (app) => {
   
     // Retrieve a single resume with id
     router.get("/:id", [authenticate], resumes.findOne);
-  
+
     // Update a resume with id
     router.put("/:id", [authenticate], resumes.update);
+
+    // Retrieve comments for a specific resume by ID
+    router.get("/:id/comment", [authenticate], resumes.findComment);
 
     // Update/Add comment to resume
     router.put("/:id/comment", [authenticate], resumes.updateComment);
